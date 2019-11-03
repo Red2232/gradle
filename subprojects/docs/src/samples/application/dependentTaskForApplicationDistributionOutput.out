@@ -1,4 +1,4 @@
-> Task :createDocs
+> Task :createDocsApp
 > Task :compileJava
 > Task :processResources NO-SOURCE
 > Task :classes
