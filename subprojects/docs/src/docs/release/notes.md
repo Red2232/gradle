@@ -8,19 +8,17 @@ Include only their name, impactful features should be called out separately belo
  [Some person](https://github.com/some-person)
 -->
 
-[Mark Nordhoff](https://github.com/MarkNordhoff)
+<!-- 
+## 1
 
-## Improvements for plugin authors
+details of 1
 
-### New managed property types
+## 2
 
-TBD - Managed properties of type `DomainObjectSet<T>` now supported.
+details of 2
 
-### New factory methods
-
-TBD - `ObjectFactory` has a method to create `ExtensiblePolymorphicDomainObjectContainer` instances.
-TBD - `ObjectFactory` has a method to create `NamedDomainObjectSet` instances.
-TBD - `ObjectFactory` has a method to create `NamedDomainObjectList` instances.
+## n
+-->
 
 ## Upgrade Instructions
 
