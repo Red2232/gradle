@@ -20,6 +20,7 @@ import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import groovy.lang.MissingMethodException;
 import org.gradle.api.Action;
+import org.gradle.api.DomainObjectSet;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.NonExtensible;
 import org.gradle.api.file.ConfigurableFileCollection;
@@ -42,6 +43,7 @@ import org.gradle.api.plugins.ExtensionContainer;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
+import org.gradle.api.provider.Provider;
 import org.gradle.api.provider.SetProperty;
 import org.gradle.api.reflect.HasPublicType;
 import org.gradle.api.reflect.TypeOf;
@@ -1847,6 +1849,23 @@ public class AsmBackedClassGeneratorTest {
         MapProperty<String, Number> getProp();
     }
 
+    public interface InterfaceProviderBean {
+        Provider<? extends Number> getProp();
+    }
+
+    public abstract static class AbstractProviderBean implements InterfaceProviderBean {
+        // Covariant return type
+        @Override
+        public abstract Provider<Long> getProp();
+    }
+
+    public interface InterfaceCovariantReadOnlyPropertyBean extends InterfaceProviderBean {
+        Property<Long> getProp();
+    }
+
+    public abstract static class AbstractCovariantReadOnlyPropertyBean extends AbstractProviderBean implements InterfaceCovariantReadOnlyPropertyBean {
+    }
+
     public static abstract class NamedBean {
         public NamedBean(String name) {
         }
@@ -1854,6 +1873,10 @@ public class AsmBackedClassGeneratorTest {
 
     public interface InterfaceContainerPropertyBean {
         NamedDomainObjectContainer<NamedBean> getProp();
+    }
+
+    public interface InterfaceDomainSetPropertyBean {
+        DomainObjectSet<NamedBean> getProp();
     }
 
     public interface InterfaceWithDefaultMethods {
@@ -1909,5 +1932,16 @@ public class AsmBackedClassGeneratorTest {
     }
 
     public static abstract class AbstractClassWithTypeParamProperty implements InterfacePropertyWithTypeParamBean<Param<String>> {
+    }
+
+    public static abstract class BrokenConstructor {
+        public BrokenConstructor() {
+            throw new RuntimeException("broken");
+        }
+
+        abstract Property<Number> getValue();
+
+        @Nested
+        abstract InterfaceFilePropertyBean getBean();
     }
 }

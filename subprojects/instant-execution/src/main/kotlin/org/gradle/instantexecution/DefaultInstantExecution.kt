@@ -181,7 +181,8 @@ class DefaultInstantExecution internal constructor(
     fun instantExecutionReport() = InstantExecutionReport(
         reportOutputDir,
         logger,
-        maxProblems()
+        maxProblems(),
+        failOnProblems()
     )
 
     private
@@ -205,6 +206,7 @@ class DefaultInstantExecution internal constructor(
     fun readContextFor(decoder: KryoBackedDecoder) = DefaultReadContext(
         codecs.userTypesCodec,
         decoder,
+        service(),
         beanConstructors,
         logger
     )
@@ -330,6 +332,12 @@ class DefaultInstantExecution internal constructor(
         systemProperty(SystemProperties.maxProblems)
             ?.let(Integer::valueOf)
             ?: 512
+
+    private
+    fun failOnProblems(): Boolean =
+        systemProperty(SystemProperties.failOnProblems)
+            ?.toBoolean()
+            ?: false
 
     private
     fun systemProperty(propertyName: String) =

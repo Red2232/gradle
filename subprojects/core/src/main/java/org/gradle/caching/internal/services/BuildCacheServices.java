@@ -40,7 +40,7 @@ import org.gradle.internal.os.OperatingSystem;
 import org.gradle.internal.remote.internal.inet.InetAddressFactory;
 import org.gradle.internal.scopeids.id.BuildInvocationScopeId;
 import org.gradle.internal.service.ServiceRegistry;
-import org.gradle.internal.snapshot.FileSystemMirror;
+import org.gradle.internal.vfs.VirtualFileSystem;
 import org.gradle.util.GradleVersion;
 import org.gradle.util.Path;
 
@@ -76,9 +76,7 @@ public class BuildCacheServices {
             SystemProperties.getInstance().getUserName(),
             OperatingSystem.current().getName(),
             buildInvocationScopeId.getId().asString(),
-            properties -> {
-                properties.setProperty(GRADLE_VERSION_KEY, GradleVersion.current().getVersion());
-            },
+            properties -> properties.setProperty(GRADLE_VERSION_KEY, GradleVersion.current().getVersion()),
             inetAddressFactory::getHostname
         );
     }
@@ -86,10 +84,10 @@ public class BuildCacheServices {
     BuildCacheCommandFactory createBuildCacheCommandFactory(
         BuildCacheEntryPacker packer,
         OriginMetadataFactory originMetadataFactory,
-        FileSystemMirror fileSystemMirror,
+        VirtualFileSystem virtualFileSystem,
         StringInterner stringInterner
     ) {
-        return new BuildCacheCommandFactory(packer, originMetadataFactory, fileSystemMirror, stringInterner);
+        return new BuildCacheCommandFactory(packer, originMetadataFactory, virtualFileSystem, stringInterner);
     }
 
     BuildCacheController createBuildCacheController(
